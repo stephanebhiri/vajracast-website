@@ -7,280 +7,674 @@
   <title>VAJRA CAST - Professional Video Stream Routing</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="icon" type="image/png" href="assets/images/favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- HERO SECTION -->
-  <section class="hero">
-    <div class="hero-content">
-      <img src="assets/images/logo.png" alt="VAJRA CAST" class="hero-logo">
-      <p class="hero-tagline">Receive, process and redistribute live video streams<br>with deterministic stability.</p>
-      <div class="hero-cta">
-        <a href="#how-it-works" class="btn btn-primary">How it works</a>
-        <a href="#contact" class="btn btn-secondary">Get in touch</a>
-      </div>
+  <!-- VIDEO INTRO (Full screen takeover) -->
+  <div class="intro" id="intro">
+    <canvas class="particle-canvas" id="particleCanvas"></canvas>
+    <div class="intro-corner intro-corner-tl"></div>
+    <div class="intro-corner intro-corner-tr"></div>
+    <div class="intro-corner intro-corner-bl"></div>
+    <div class="intro-corner intro-corner-br"></div>
+    <video class="intro-video" id="introVideo" playsinline preload="auto">
+      <source src="assets/videos/intro.mp4" type="video/mp4">
+    </video>
+    <button class="intro-play" id="introPlay">
+      <svg viewBox="0 0 64 64" fill="currentColor">
+        <polygon points="24,16 48,32 24,48"/>
+      </svg>
+      <span>Enter</span>
+    </button>
+    <button class="intro-skip" id="introSkip">Skip intro</button>
+  </div>
+
+  <!-- MAIN SITE (Hidden until intro completes) -->
+  <main class="site" id="site">
+
+    <!-- BROADCAST INDICATOR -->
+    <div class="broadcast-indicator">
+      <span class="rec-dot"></span>
+      <span class="rec-label">LIVE</span>
     </div>
-    <div class="hero-gradient"></div>
-  </section>
 
-  <!-- HOW IT WORKS -->
-  <section id="how-it-works" class="section">
-    <div class="container">
-      <h2 class="section-title">How it works</h2>
-      <p class="section-subtitle">Three deterministic stages. No surprises.</p>
-
-      <div class="flow-grid">
-        <div class="flow-card">
-          <div class="flow-icon">
-            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M8 24h32M8 16h24M8 32h24"/>
-              <circle cx="40" cy="24" r="4"/>
-            </svg>
-          </div>
-          <h3>Ingest</h3>
-          <p>Receive streams from any source via SRT, SRTLA, RTMP, UDP or RTP. Protocol-agnostic input layer with automatic reconnection.</p>
-        </div>
-
-        <div class="flow-arrow">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M5 12h14M13 6l6 6-6 6"/>
-          </svg>
-        </div>
-
-        <div class="flow-card">
-          <div class="flow-icon">
-            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
-              <circle cx="24" cy="24" r="8"/>
-              <path d="M24 8v8M24 32v8M8 24h8M32 24h8"/>
-            </svg>
-          </div>
-          <h3>Process</h3>
-          <p>Optional transcoding, audio matrix routing, format conversion. Zero-copy passthrough when processing isn't needed.</p>
-        </div>
-
-        <div class="flow-arrow">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M5 12h14M13 6l6 6-6 6"/>
-          </svg>
-        </div>
-
-        <div class="flow-card">
-          <div class="flow-icon">
-            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
-              <circle cx="8" cy="24" r="4"/>
-              <path d="M12 24h12M24 24l8-8M24 24l8 8M24 24h16"/>
-            </svg>
-          </div>
-          <h3>Redistribute</h3>
-          <p>Fan-out to multiple destinations simultaneously. SRT, RTMP push, multicast UDP. One input, unlimited outputs.</p>
+    <!-- NAVIGATION -->
+    <nav class="nav">
+      <div class="nav-inner">
+        <a href="#" class="nav-brand">
+          <span class="nav-logo">◇</span>
+          <span class="nav-name">VAJRA CAST</span>
+        </a>
+        <div class="nav-links">
+          <a href="#flow">Flow</a>
+          <a href="#features">Features</a>
+          <a href="#protocols">Protocols</a>
+          <a href="#specs">Specs</a>
+          <a href="#contact" class="nav-cta">Contact</a>
         </div>
       </div>
-    </div>
-  </section>
+    </nav>
 
-  <!-- DIFFERENTIATORS -->
-  <section id="why" class="section section-alt">
-    <div class="container">
-      <h2 class="section-title">Built for reliability</h2>
-      <p class="section-subtitle">Infrastructure-grade video routing.</p>
-
-      <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-icon">
-            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M16 4v24M4 16h24"/>
-              <circle cx="16" cy="16" r="12"/>
-            </svg>
-          </div>
-          <h3>Deterministic</h3>
-          <p>Predictable latency. Same behavior every time. No magic, no guessing.</p>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-content">
+        <div class="hero-status">
+          <span class="status-dot"></span>
+          <span class="status-label">SYSTEM ONLINE</span>
         </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">
-            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M4 8h24v16H4zM8 12h4M8 16h8"/>
-            </svg>
-          </div>
-          <h3>Protocol Native</h3>
-          <p>SRT, SRTLA, RTMP, UDP multicast, RTP. First-class support, not adapters.</p>
+        <div class="hero-badge">VIDEO INFRASTRUCTURE</div>
+        <h1 class="hero-title">
+          Route video streams<br>
+          <span class="hero-accent">with certainty</span>
+        </h1>
+        <p class="hero-desc">
+          Receive, process and redistribute live video streams with deterministic stability.
+          No surprises. No dropped frames. No excuses.
+        </p>
+        <div class="hero-actions">
+          <a href="#flow" class="btn btn-primary">See how it works</a>
+          <a href="#contact" class="btn btn-ghost">Get in touch</a>
         </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">
-            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M6 26V6M26 26V10M16 26V14"/>
-            </svg>
-          </div>
-          <h3>Observable</h3>
-          <p>Real-time metrics on every stream. Bitrate, latency, packet loss. Full visibility.</p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">
-            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
-              <circle cx="16" cy="16" r="12"/>
-              <path d="M16 10v6l4 4"/>
-            </svg>
-          </div>
-          <h3>Always On</h3>
-          <p>Auto-reconnect, failover paths, persistent routes. Streams don't stop.</p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">
-            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
-              <rect x="4" y="8" width="10" height="16" rx="1"/>
-              <rect x="18" y="8" width="10" height="16" rx="1"/>
-              <path d="M14 16h4"/>
-            </svg>
-          </div>
-          <h3>Zero-Copy</h3>
-          <p>Passthrough mode adds zero CPU overhead. Route without touching pixels.</p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">
-            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M8 8l16 16M24 8L8 24"/>
-              <circle cx="16" cy="16" r="12"/>
-            </svg>
-          </div>
-          <h3>No Lock-in</h3>
-          <p>Standard protocols. Export configs. Your infrastructure, your control.</p>
+        <div class="scroll-indicator">
+          <span>Scroll</span>
+          <div class="scroll-line"></div>
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- ARCHITECTURE -->
-  <section id="architecture" class="section">
-    <div class="container">
-      <h2 class="section-title">Architecture</h2>
-      <p class="section-subtitle">Simple, scalable, predictable.</p>
-
-      <div class="architecture-diagram">
-        <div class="arch-layer arch-inputs">
-          <span class="arch-label">INPUTS</span>
-          <div class="arch-items">
-            <div class="arch-item">SRT</div>
-            <div class="arch-item">SRTLA</div>
-            <div class="arch-item">RTMP</div>
-            <div class="arch-item">UDP</div>
+      <div class="hero-visual">
+        <div class="hero-diagram">
+          <div class="diagram-node diagram-input">
+            <span class="node-label">INPUT</span>
+            <div class="node-ports">
+              <span>SRT</span>
+              <span>SRTLA</span>
+              <span>RTMP</span>
+            </div>
           </div>
-        </div>
-
-        <div class="arch-flow">
-          <svg viewBox="0 0 48 24" fill="none" stroke="currentColor" stroke-width="1">
-            <path d="M0 12h48" stroke-dasharray="4 2"/>
-          </svg>
-        </div>
-
-        <div class="arch-layer arch-core">
-          <span class="arch-label">VAJRA CORE</span>
-          <div class="arch-core-box">
-            <div class="arch-core-item">Route Engine</div>
-            <div class="arch-core-item">Audio Matrix</div>
-            <div class="arch-core-item">Transcoder</div>
-            <div class="arch-core-item">Metrics</div>
+          <div class="diagram-flow">
+            <svg viewBox="0 0 120 40">
+              <path d="M0 20 H40 M80 20 H120" stroke="currentColor" stroke-width="1" stroke-dasharray="4 4"/>
+              <rect x="40" y="8" width="40" height="24" rx="4" fill="none" stroke="currentColor" stroke-width="1"/>
+              <text x="60" y="24" text-anchor="middle" fill="currentColor" font-size="8">CORE</text>
+            </svg>
           </div>
-        </div>
-
-        <div class="arch-flow">
-          <svg viewBox="0 0 48 24" fill="none" stroke="currentColor" stroke-width="1">
-            <path d="M0 12h48" stroke-dasharray="4 2"/>
-          </svg>
-        </div>
-
-        <div class="arch-layer arch-outputs">
-          <span class="arch-label">OUTPUTS</span>
-          <div class="arch-items">
-            <div class="arch-item">SRT</div>
-            <div class="arch-item">RTMP</div>
-            <div class="arch-item">Multicast</div>
-            <div class="arch-item">HLS</div>
+          <div class="diagram-node diagram-output">
+            <span class="node-label">OUTPUTS</span>
+            <div class="node-ports">
+              <span>SRT ×N</span>
+              <span>RTMP</span>
+              <span>UDP</span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- USE CASES -->
-  <section id="use-cases" class="section section-alt">
-    <div class="container">
-      <h2 class="section-title">Use cases</h2>
-      <p class="section-subtitle">Where VAJRA CAST operates.</p>
-
-      <div class="usecases-grid">
-        <div class="usecase-card">
-          <h3>Live Broadcast</h3>
-          <p>Contribution feeds from field to studio. SRT bonding, automatic failover, real-time monitoring.</p>
+    <!-- FLOW -->
+    <section id="flow" class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-number">01</span>
+          <h2 class="section-title">The Flow</h2>
+          <p class="section-desc">Three stages. Deterministic. Predictable.</p>
         </div>
 
-        <div class="usecase-card">
-          <h3>Live Events</h3>
-          <p>Multi-camera routing for concerts, sports, conferences. Low-latency distribution to multiple endpoints.</p>
-        </div>
+        <div class="flow-stages">
+          <div class="flow-stage">
+            <div class="stage-icon">
+              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M8 24h32"/>
+                <path d="M8 16h24"/>
+                <path d="M8 32h24"/>
+                <circle cx="40" cy="24" r="4"/>
+              </svg>
+            </div>
+            <div class="stage-content">
+              <h3>Ingest</h3>
+              <p>Receive streams from any source. SRT listener/caller, SRTLA bonding for mobile, RTMP push, UDP unicast. Protocol-agnostic input layer with automatic reconnection and failover.</p>
+              <div class="stage-protocols">
+                <span>SRT</span>
+                <span>SRTLA</span>
+                <span>RTMP</span>
+                <span>UDP</span>
+                <span>HTTP</span>
+              </div>
+            </div>
+          </div>
 
-        <div class="usecase-card">
-          <h3>Private CDN</h3>
-          <p>Build your own distribution network. Fan-out from origin to edge nodes with full control.</p>
+          <div class="flow-connector"></div>
+
+          <div class="flow-stage">
+            <div class="stage-icon">
+              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="24" cy="24" r="10"/>
+                <path d="M24 8v6"/>
+                <path d="M24 34v6"/>
+                <path d="M8 24h6"/>
+                <path d="M34 24h6"/>
+              </svg>
+            </div>
+            <div class="stage-content">
+              <h3>Process</h3>
+              <p>Optional transcoding with FFmpeg. Audio matrix routing for complex channel mapping (7.1→stereo). Format conversion. Or zero-copy passthrough when processing isn't needed—under 50ms added latency.</p>
+              <div class="stage-modes">
+                <div class="mode">
+                  <span class="mode-name">Passthrough</span>
+                  <span class="mode-value">&lt;50ms</span>
+                </div>
+                <div class="mode">
+                  <span class="mode-name">Transcode</span>
+                  <span class="mode-value">200-500ms</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flow-connector"></div>
+
+          <div class="flow-stage">
+            <div class="stage-icon">
+              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="24" r="4"/>
+                <path d="M16 24h8"/>
+                <path d="M24 24l12-8"/>
+                <path d="M24 24l12 0"/>
+                <path d="M24 24l12 8"/>
+                <circle cx="40" cy="16" r="3"/>
+                <circle cx="40" cy="24" r="3"/>
+                <circle cx="40" cy="32" r="3"/>
+              </svg>
+            </div>
+            <div class="stage-content">
+              <h3>Redistribute</h3>
+              <p>Fan-out to unlimited destinations simultaneously. Internal multicast means zero CPU overhead per additional output. Add or remove outputs hot—no interruption to existing streams.</p>
+              <div class="stage-protocols">
+                <span>SRT</span>
+                <span>RTMP</span>
+                <span>UDP</span>
+                <span>HLS</span>
+                <span>Multicast</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- METRICS -->
-  <section id="metrics" class="section">
-    <div class="container">
-      <div class="metrics-grid">
-        <div class="metric-card">
-          <span class="metric-value">50+</span>
-          <span class="metric-label">Simultaneous routes</span>
+    <!-- FEATURES -->
+    <section id="features" class="section section-dark">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-number">02</span>
+          <h2 class="section-title">Built Different</h2>
+          <p class="section-desc">Infrastructure-grade reliability.</p>
         </div>
-        <div class="metric-card">
-          <span class="metric-value">&lt;50ms</span>
-          <span class="metric-label">Added latency</span>
-        </div>
-        <div class="metric-card">
-          <span class="metric-value">0%</span>
-          <span class="metric-label">CPU in passthrough</span>
-        </div>
-        <div class="metric-card">
-          <span class="metric-value">24/7</span>
-          <span class="metric-label">Operational stability</span>
-        </div>
-      </div>
-    </div>
-  </section>
 
-  <!-- FOOTER -->
-  <footer id="contact" class="footer">
-    <div class="container">
-      <div class="footer-content">
-        <div class="footer-brand">
-          <span class="footer-logo">VAJRA CAST</span>
-          <p>Professional video stream routing infrastructure.</p>
-        </div>
-        <div class="footer-links">
-          <h4>Product</h4>
-          <a href="#how-it-works">How it works</a>
-          <a href="#architecture">Architecture</a>
-          <a href="#use-cases">Use cases</a>
-        </div>
-        <div class="footer-links">
-          <h4>Contact</h4>
-          <a href="mailto:contact@vajracast.com">contact@vajracast.com</a>
+        <div class="features-grid">
+          <div class="feature">
+            <div class="feature-header">
+              <span class="feature-icon">⬡</span>
+              <h3>Deterministic</h3>
+            </div>
+            <p>Same input, same output, every time. Predictable latency. No magic black boxes. You know exactly what's happening and when.</p>
+          </div>
+
+          <div class="feature">
+            <div class="feature-header">
+              <span class="feature-icon">◈</span>
+              <h3>Zero-Copy Distribution</h3>
+            </div>
+            <p>Internal multicast routing means adding outputs costs zero CPU. Route one stream to 50 destinations with the same overhead as one.</p>
+          </div>
+
+          <div class="feature">
+            <div class="feature-header">
+              <span class="feature-icon">◇</span>
+              <h3>Hot Reconfiguration</h3>
+            </div>
+            <p>Add outputs, swap inputs, toggle destinations—all while streams are live. No restart required. No interruption to other outputs.</p>
+          </div>
+
+          <div class="feature">
+            <div class="feature-header">
+              <span class="feature-icon">▣</span>
+              <h3>Full Observability</h3>
+            </div>
+            <p>Real-time metrics on every stream: RTT, bandwidth, packet loss, buffer depth. WebSocket updates. Historical graphs. Know your network.</p>
+          </div>
+
+          <div class="feature">
+            <div class="feature-header">
+              <span class="feature-icon">◎</span>
+              <h3>Audio Matrix</h3>
+            </div>
+            <p>Complex channel routing built-in. Downmix 7.1 to stereo. Extract specific channels. Apply per-channel gain. Professional audio control.</p>
+          </div>
+
+          <div class="feature">
+            <div class="feature-header">
+              <span class="feature-icon">⬢</span>
+              <h3>Audit Trail</h3>
+            </div>
+            <p>Every action logged. Who changed what, when. Full history of route modifications, output toggles, input swaps. Compliance-ready.</p>
+          </div>
         </div>
       </div>
-      <div class="footer-bottom">
-        <p>&copy; 2026 VAJRA CAST. All rights reserved.</p>
+    </section>
+
+    <!-- PROTOCOLS -->
+    <section id="protocols" class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-number">03</span>
+          <h2 class="section-title">Protocol Native</h2>
+          <p class="section-desc">First-class support. Not adapters.</p>
+        </div>
+
+        <div class="protocols-table">
+          <div class="protocol-group">
+            <h4 class="protocol-group-title">Inputs</h4>
+            <div class="protocol-list">
+              <div class="protocol">
+                <span class="protocol-name">SRT</span>
+                <span class="protocol-desc">Listener/Caller modes, encryption, configurable latency</span>
+              </div>
+              <div class="protocol">
+                <span class="protocol-name">SRTLA</span>
+                <span class="protocol-desc">Bonded connections for mobile (BELABOX compatible)</span>
+              </div>
+              <div class="protocol">
+                <span class="protocol-name">RTMP</span>
+                <span class="protocol-desc">Push from encoders, OBS, hardware</span>
+              </div>
+              <div class="protocol">
+                <span class="protocol-name">UDP</span>
+                <span class="protocol-desc">Unicast from local sources</span>
+              </div>
+              <div class="protocol">
+                <span class="protocol-name">HTTP/TS</span>
+                <span class="protocol-desc">Pull from web sources</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="protocol-group">
+            <h4 class="protocol-group-title">Outputs</h4>
+            <div class="protocol-list">
+              <div class="protocol">
+                <span class="protocol-name">SRT</span>
+                <span class="protocol-desc">Push to any SRT receiver, multiple simultaneous</span>
+              </div>
+              <div class="protocol">
+                <span class="protocol-name">RTMP</span>
+                <span class="protocol-desc">YouTube, Twitch, Facebook, custom endpoints</span>
+              </div>
+              <div class="protocol">
+                <span class="protocol-name">UDP Multicast</span>
+                <span class="protocol-desc">Efficient local distribution</span>
+              </div>
+              <div class="protocol">
+                <span class="protocol-name">HLS</span>
+                <span class="protocol-desc">Adaptive streaming for web players</span>
+              </div>
+              <div class="protocol">
+                <span class="protocol-name">HTTP/TS</span>
+                <span class="protocol-desc">Direct TS streaming for VLC, players</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </footer>
+    </section>
+
+    <!-- SPECS -->
+    <section id="specs" class="section section-dark">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-number">04</span>
+          <h2 class="section-title">Specifications</h2>
+          <p class="section-desc">Numbers that matter.</p>
+        </div>
+
+        <div class="specs-grid">
+          <div class="spec">
+            <span class="spec-value">50+</span>
+            <span class="spec-label">Simultaneous routes</span>
+          </div>
+          <div class="spec">
+            <span class="spec-value">&lt;50ms</span>
+            <span class="spec-label">Passthrough latency</span>
+          </div>
+          <div class="spec">
+            <span class="spec-value">0%</span>
+            <span class="spec-label">CPU per additional output</span>
+          </div>
+          <div class="spec">
+            <span class="spec-value">100K</span>
+            <span class="spec-label">Audit events retained</span>
+          </div>
+          <div class="spec">
+            <span class="spec-value">7 days</span>
+            <span class="spec-label">Metrics history</span>
+          </div>
+          <div class="spec">
+            <span class="spec-value">24/7</span>
+            <span class="spec-label">Operational stability</span>
+          </div>
+        </div>
+
+        <div class="tech-stack">
+          <h4>Technology Stack</h4>
+          <div class="stack-items">
+            <span>Node.js</span>
+            <span>FFmpeg</span>
+            <span>SRT Tools</span>
+            <span>SQLite</span>
+            <span>React</span>
+            <span>WebSocket</span>
+            <span>PM2</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- USE CASES -->
+    <section id="usecases" class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-number">05</span>
+          <h2 class="section-title">Use Cases</h2>
+          <p class="section-desc">Where Vajra Cast operates.</p>
+        </div>
+
+        <div class="usecases-grid">
+          <div class="usecase">
+            <h3>Live Broadcast</h3>
+            <p>Contribution feeds from field to studio. SRT bonding for mobile reporters. Automatic failover between primary and backup. Real-time quality monitoring.</p>
+          </div>
+          <div class="usecase">
+            <h3>Live Events</h3>
+            <p>Multi-camera routing for concerts, sports, conferences. Fan-out to broadcast, web, social simultaneously. Add destinations on the fly as needs change.</p>
+          </div>
+          <div class="usecase">
+            <h3>Private CDN</h3>
+            <p>Build your own distribution network. Origin to edge routing with full control. No third-party dependencies. Your infrastructure, your rules.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer id="contact" class="footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-main">
+            <div class="footer-brand">
+              <span class="footer-logo">◇</span>
+              <span class="footer-name">VAJRA CAST</span>
+            </div>
+            <p class="footer-tagline">Professional video stream routing infrastructure.</p>
+            <a href="mailto:contact@vajracast.com" class="footer-email">contact@vajracast.com</a>
+          </div>
+          <div class="footer-links">
+            <div class="footer-col">
+              <h4>Product</h4>
+              <a href="#flow">How it works</a>
+              <a href="#features">Features</a>
+              <a href="#protocols">Protocols</a>
+              <a href="#specs">Specifications</a>
+            </div>
+            <div class="footer-col">
+              <h4>Resources</h4>
+              <a href="#">Documentation</a>
+              <a href="#">API Reference</a>
+              <a href="#">Support</a>
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <div class="footer-meta">
+            <div class="signal-meter">
+              <span class="bar bar-1"></span>
+              <span class="bar bar-2"></span>
+              <span class="bar bar-3"></span>
+              <span class="bar bar-4"></span>
+              <span class="bar bar-5"></span>
+            </div>
+            <span class="footer-status">Signal Optimal</span>
+          </div>
+          <p>© 2026 Vajra Cast. All rights reserved.</p>
+          <div class="footer-version">v2.0</div>
+        </div>
+      </div>
+    </footer>
+
+  </main>
+
+  <script>
+    // ═══════════════════════════════════════════════════════════════
+    // PARTICLE SYSTEM - Data Stream Effect
+    // Particles emanate from center, flow horizontally to edges
+    // ═══════════════════════════════════════════════════════════════
+
+    class Particle {
+      constructor(canvas, ctx) {
+        this.canvas = canvas;
+        this.ctx = ctx;
+        this.trail = []; // Position history for digital trail
+        this.trailLength = 12;
+        this.reset();
+      }
+
+      reset() {
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+
+        // Spawn exactly at center
+        this.x = w / 2;
+        this.y = h / 2 + (Math.random() - 0.5) * 80;
+
+        // 50/50 left or right direction
+        this.direction = Math.random() < 0.5 ? -1 : 1;
+
+        // Velocity - horizontal with slight vertical drift
+        this.vx = (1 + Math.random() * 1.5) * this.direction;
+        this.vy = (Math.random() - 0.5) * 0.3;
+
+        // Size
+        this.size = 1.5 + Math.random() * 1.5;
+
+        // Lifetime
+        this.life = 1;
+        this.decay = 0.002 + Math.random() * 0.004;
+
+        // Color - cyan/blue spectrum
+        const colors = [
+          { r: 0, g: 212, b: 255 },    // Cyan
+          { r: 86, g: 204, b: 242 },   // Light blue
+          { r: 0, g: 168, b: 255 },    // Electric blue
+        ];
+        this.color = colors[Math.floor(Math.random() * colors.length)];
+
+        // Opacity
+        this.maxOpacity = 0.4 + Math.random() * 0.4;
+
+        // Clear trail
+        this.trail = [];
+      }
+
+      update() {
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+
+        // Store position in trail
+        this.trail.push({ x: this.x, y: this.y });
+        if (this.trail.length > this.trailLength) {
+          this.trail.shift();
+        }
+
+        // Move particle
+        this.x += this.vx;
+        this.y += this.vy;
+
+        // Decay life
+        this.life -= this.decay;
+
+        // Subtle acceleration outward
+        this.vx *= 1.008;
+
+        // Reset if dead or off screen
+        if (this.life <= 0 || this.x < -20 || this.x > w + 20 || this.y < -20 || this.y > h + 20) {
+          this.reset();
+        }
+      }
+
+      draw() {
+        const { r, g, b } = this.color;
+        const w = window.innerWidth;
+
+        // Base opacity
+        const distFromCenter = Math.abs(this.x - w / 2) / (w / 2);
+        const fadeIn = Math.min(1, (1 - this.life) * 6);
+        const fadeOut = this.life;
+        const baseOpacity = this.maxOpacity * fadeIn * fadeOut * (1 - distFromCenter * 0.4);
+
+        // Draw digital trail (segmented for digital look)
+        for (let i = 0; i < this.trail.length; i++) {
+          const point = this.trail[i];
+          const trailProgress = i / this.trail.length;
+          const trailOpacity = baseOpacity * trailProgress * 0.6;
+          const trailSize = this.size * (0.3 + trailProgress * 0.5);
+
+          // Draw trail segment as small rectangle (digital look)
+          this.ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${trailOpacity})`;
+          this.ctx.fillRect(
+            point.x - trailSize / 2,
+            point.y - trailSize / 2,
+            trailSize * 1.5,
+            trailSize
+          );
+        }
+
+        // Draw head glow
+        const gradient = this.ctx.createRadialGradient(
+          this.x, this.y, 0,
+          this.x, this.y, this.size * 3
+        );
+        gradient.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${baseOpacity})`);
+        gradient.addColorStop(0.5, `rgba(${r}, ${g}, ${b}, ${baseOpacity * 0.3})`);
+        gradient.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
+
+        this.ctx.beginPath();
+        this.ctx.arc(this.x, this.y, this.size * 3, 0, Math.PI * 2);
+        this.ctx.fillStyle = gradient;
+        this.ctx.fill();
+
+        // Draw bright head core
+        this.ctx.fillStyle = `rgba(255, 255, 255, ${baseOpacity * 0.8})`;
+        this.ctx.fillRect(this.x - this.size/2, this.y - this.size/2, this.size, this.size);
+      }
+    }
+
+    class ParticleSystem {
+      constructor(canvasId) {
+        this.canvas = document.getElementById(canvasId);
+        this.ctx = this.canvas.getContext('2d');
+        this.particles = [];
+        this.particleCount = 40;
+        this.animationId = null;
+        this.width = 0;
+        this.height = 0;
+
+        this.resize();
+        this.init();
+        this.animate();
+
+        window.addEventListener('resize', () => {
+          this.resize();
+          this.particles.forEach(p => p.canvas = this.canvas);
+        });
+      }
+
+      resize() {
+        this.width = window.innerWidth;
+        this.height = window.innerHeight;
+        this.canvas.width = this.width;
+        this.canvas.height = this.height;
+      }
+
+      init() {
+        for (let i = 0; i < this.particleCount; i++) {
+          const particle = new Particle(this.canvas, this.ctx);
+          particle.life = Math.random();
+          this.particles.push(particle);
+        }
+      }
+
+      animate() {
+        // Clear canvas completely (transparent background)
+        this.ctx.clearRect(0, 0, this.width, this.height);
+
+        // Update and draw
+        for (const particle of this.particles) {
+          particle.update();
+          particle.draw();
+        }
+
+        this.animationId = requestAnimationFrame(() => this.animate());
+      }
+
+      stop() {
+        if (this.animationId) {
+          cancelAnimationFrame(this.animationId);
+          this.ctx.clearRect(0, 0, this.width, this.height);
+        }
+      }
+    }
+
+    // Initialize particle system
+    const particleSystem = new ParticleSystem('particleCanvas');
+
+    // ═══════════════════════════════════════════════════════════════
+    // INTRO / SITE LOGIC
+    // ═══════════════════════════════════════════════════════════════
+
+    const intro = document.getElementById('intro');
+    const introVideo = document.getElementById('introVideo');
+    const introPlay = document.getElementById('introPlay');
+    const introSkip = document.getElementById('introSkip');
+    const site = document.getElementById('site');
+
+    function showSite() {
+      intro.classList.add('intro-hidden');
+      site.classList.add('site-visible');
+      document.body.style.overflow = 'auto';
+      // Stop particle system when intro ends
+      setTimeout(() => particleSystem.stop(), 1000);
+    }
+
+    introPlay.addEventListener('click', () => {
+      introPlay.style.display = 'none';
+      introSkip.style.opacity = '1';
+      introVideo.play();
+    });
+
+    introSkip.addEventListener('click', () => {
+      introVideo.pause();
+      showSite();
+    });
+
+    introVideo.addEventListener('ended', showSite);
+
+    document.body.style.overflow = 'hidden';
+
+    // Nav scroll effect
+    const nav = document.querySelector('.nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('nav-scrolled', window.scrollY > 50);
+    });
+  </script>
 
 </body>
 </html>
