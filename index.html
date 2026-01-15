@@ -19,14 +19,16 @@
     <div class="intro-corner intro-corner-tr"></div>
     <div class="intro-corner intro-corner-bl"></div>
     <div class="intro-corner intro-corner-br"></div>
-    <video class="intro-video" id="introVideo" playsinline preload="auto">
+    <video class="intro-video" id="introVideo" autoplay muted playsinline preload="auto">
       <source src="assets/videos/intro.mp4" type="video/mp4">
     </video>
-    <button class="intro-play" id="introPlay">
-      <svg viewBox="0 0 64 64" fill="currentColor">
-        <polygon points="24,16 48,32 24,48"/>
+    <button class="intro-sound" id="introSound" title="Enable sound">
+      <svg class="icon-muted" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M3.63 3.63a.996.996 0 000 1.41L7.29 8.7 7 9H4c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1h3l3.29 3.29c.63.63 1.71.18 1.71-.71v-4.17l4.18 4.18c-.49.37-1.02.68-1.6.91-.36.15-.58.53-.58.92 0 .72.73 1.18 1.39.91.8-.33 1.55-.77 2.22-1.31l1.34 1.34a.996.996 0 101.41-1.41L5.05 3.63c-.39-.39-1.02-.39-1.42 0zM19 12c0 .82-.15 1.61-.41 2.34l1.53 1.53c.56-1.17.88-2.48.88-3.87 0-3.83-2.4-7.11-5.78-8.4-.59-.23-1.22.23-1.22.86v.19c0 .38.25.71.61.85C17.18 6.54 19 9.06 19 12zm-8.71-6.29l-.17.17L12 7.76V6.41c0-.89-1.08-1.33-1.71-.7zM16.5 12A4.5 4.5 0 0014 7.97v1.79l2.48 2.48c.01-.08.02-.16.02-.24z"/>
       </svg>
-      <span>Enter</span>
+      <svg class="icon-unmuted" viewBox="0 0 24 24" fill="currentColor" style="display:none">
+        <path d="M3 10v4c0 .55.45 1 1 1h3l3.29 3.29c.63.63 1.71.18 1.71-.71V6.41c0-.89-1.08-1.34-1.71-.71L7 9H4c-.55 0-1 .45-1 1zm13.5 2A4.5 4.5 0 0014 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 4.45v.2c0 .38.25.71.6.85C17.18 6.53 19 9.06 19 12s-1.82 5.47-4.4 6.5c-.36.14-.6.47-.6.85v.2c0 .63.63 1.07 1.21.85C18.6 19.11 21 15.84 21 12s-2.4-7.11-5.79-8.4c-.58-.23-1.21.22-1.21.85z"/>
+      </svg>
     </button>
     <button class="intro-skip" id="introSkip">Skip intro</button>
   </div>
@@ -51,7 +53,8 @@
           <a href="#flow">Flow</a>
           <a href="#features">Features</a>
           <a href="#protocols">Protocols</a>
-          <a href="#specs">Specs</a>
+          <a href="#interface">Interface</a>
+          <a href="#tutorials">Tutorials</a>
           <a href="#contact" class="nav-cta">Contact</a>
         </div>
       </div>
@@ -99,7 +102,13 @@
               </div>
             </div>
             <div class="flow-input">
-              <span class="flow-label">RTMP</span>
+              <span class="flow-label">HTTP</span>
+              <div class="flow-line input-line">
+                <div class="data-packet"></div>
+              </div>
+            </div>
+            <div class="flow-input">
+              <span class="flow-label">UDP</span>
               <div class="flow-line input-line">
                 <div class="data-packet"></div>
               </div>
@@ -128,7 +137,19 @@
               <div class="flow-line output-line">
                 <div class="data-packet"></div>
               </div>
+              <span class="flow-label">SRTLA</span>
+            </div>
+            <div class="flow-output">
+              <div class="flow-line output-line">
+                <div class="data-packet"></div>
+              </div>
               <span class="flow-label">RTMP</span>
+            </div>
+            <div class="flow-output">
+              <div class="flow-line output-line">
+                <div class="data-packet"></div>
+              </div>
+              <span class="flow-label">HTTP/TS</span>
             </div>
             <div class="flow-output">
               <div class="flow-line output-line">
@@ -141,12 +162,6 @@
                 <div class="data-packet"></div>
               </div>
               <span class="flow-label">HLS</span>
-            </div>
-            <div class="flow-output">
-              <div class="flow-line output-line">
-                <div class="data-packet"></div>
-              </div>
-              <span class="flow-label">Multicast</span>
             </div>
           </div>
         </div>
@@ -174,13 +189,12 @@
             </div>
             <div class="stage-content">
               <h3>Ingest</h3>
-              <p>Receive streams from any source. SRT listener/caller, SRTLA bonding for mobile, RTMP push, UDP unicast. Protocol-agnostic input layer with automatic reconnection and failover.</p>
+              <p>Receive streams from any source. SRT listener/caller with AES encryption, SRTLA bonding for mobile (BELABOX compatible), HTTP pull from web sources, UDP unicast. Automatic reconnection and failover.</p>
               <div class="stage-protocols">
                 <span>SRT</span>
                 <span>SRTLA</span>
-                <span>RTMP</span>
-                <span>UDP</span>
                 <span>HTTP</span>
+                <span>UDP</span>
               </div>
             </div>
           </div>
@@ -233,10 +247,11 @@
               <p>Fan-out to unlimited destinations simultaneously. Internal multicast means zero CPU overhead per additional output. Add or remove outputs hot—no interruption to existing streams.</p>
               <div class="stage-protocols">
                 <span>SRT</span>
+                <span>SRTLA</span>
                 <span>RTMP</span>
+                <span>HTTP/TS</span>
                 <span>UDP</span>
                 <span>HLS</span>
-                <span>Multicast</span>
               </div>
             </div>
           </div>
@@ -256,34 +271,50 @@
         <div class="features-grid">
           <div class="feature">
             <div class="feature-header">
-              <span class="feature-icon">⬡</span>
-              <h3>Deterministic</h3>
-            </div>
-            <p>Same input, same output, every time. Predictable latency. No magic black boxes. You know exactly what's happening and when.</p>
-          </div>
-
-          <div class="feature">
-            <div class="feature-header">
               <span class="feature-icon">◈</span>
               <h3>Zero-Copy Distribution</h3>
             </div>
             <p>Internal multicast routing means adding outputs costs zero CPU. Route one stream to 50 destinations with the same overhead as one.</p>
+            <div class="feature-stat">
+              <span class="stat-value">0%</span>
+              <span class="stat-label">CPU per output</span>
+            </div>
           </div>
 
           <div class="feature">
             <div class="feature-header">
               <span class="feature-icon">◇</span>
-              <h3>Hot Reconfiguration</h3>
+              <h3>Hot Management</h3>
             </div>
-            <p>Add outputs, swap inputs, toggle destinations—all while streams are live. No restart required. No interruption to other outputs.</p>
+            <p>Add, remove, enable, disable, move outputs—all while streams are live. No restart required. Zero interruption to other outputs.</p>
+            <div class="feature-stat">
+              <span class="stat-value">0</span>
+              <span class="stat-label">downtime</span>
+            </div>
+          </div>
+
+          <div class="feature">
+            <div class="feature-header">
+              <span class="feature-icon">⇄</span>
+              <h3>Hot Swap</h3>
+            </div>
+            <p>Exchange inputs between routes without visible interruption. Seamless failover between primary and backup sources. Frame-accurate transitions.</p>
+            <div class="feature-stat">
+              <span class="stat-value">~0</span>
+              <span class="stat-label">frame gap</span>
+            </div>
           </div>
 
           <div class="feature">
             <div class="feature-header">
               <span class="feature-icon">▣</span>
-              <h3>Full Observability</h3>
+              <h3>Real-Time Metrics</h3>
             </div>
-            <p>Real-time metrics on every stream: RTT, bandwidth, packet loss, buffer depth. WebSocket updates. Historical graphs. Know your network.</p>
+            <p>Live monitoring via WebSocket: RTT, bandwidth, packet loss, flight size, buffer depth. Historical graphs with 7-day retention.</p>
+            <div class="feature-stat">
+              <span class="stat-value">7</span>
+              <span class="stat-label">days history</span>
+            </div>
           </div>
 
           <div class="feature">
@@ -291,15 +322,47 @@
               <span class="feature-icon">◎</span>
               <h3>Audio Matrix</h3>
             </div>
-            <p>Complex channel routing built-in. Downmix 7.1 to stereo. Extract specific channels. Apply per-channel gain. Professional audio control.</p>
+            <p>Complex channel routing. Downmix 7.1→stereo. Extract specific channels. Per-channel gain control. Mix multiple sources.</p>
+            <div class="feature-stat">
+              <span class="stat-value">8</span>
+              <span class="stat-label">channels max</span>
+            </div>
           </div>
 
           <div class="feature">
             <div class="feature-header">
               <span class="feature-icon">⬢</span>
-              <h3>Audit Trail</h3>
+              <h3>Audit Log</h3>
             </div>
-            <p>Every action logged. Who changed what, when. Full history of route modifications, output toggles, input swaps. Compliance-ready.</p>
+            <p>Every action logged with timestamps. Route changes, output toggles, input swaps. Filter by user, route, or event type.</p>
+            <div class="feature-stat">
+              <span class="stat-value">100K</span>
+              <span class="stat-label">events retained</span>
+            </div>
+          </div>
+
+          <div class="feature">
+            <div class="feature-header">
+              <span class="feature-icon">{ }</span>
+              <h3>REST API</h3>
+            </div>
+            <p>Full CRUD on routes, inputs, outputs. JWT authentication. OpenAPI documentation. Automate everything, integrate anywhere.</p>
+            <div class="feature-stat">
+              <span class="stat-value">100%</span>
+              <span class="stat-label">coverage</span>
+            </div>
+          </div>
+
+          <div class="feature">
+            <div class="feature-header">
+              <span class="feature-icon">⚡</span>
+              <h3>WebSocket</h3>
+            </div>
+            <p>Real-time push updates for stats, status changes, system events. Build custom dashboards. Instant notifications.</p>
+            <div class="feature-stat">
+              <span class="stat-value">&lt;10</span>
+              <span class="stat-label">ms latency</span>
+            </div>
           </div>
         </div>
       </div>
@@ -320,23 +383,19 @@
             <div class="protocol-list">
               <div class="protocol">
                 <span class="protocol-name">SRT</span>
-                <span class="protocol-desc">Listener/Caller modes, encryption, configurable latency</span>
+                <span class="protocol-desc">Listener/Caller modes, AES-128/256 encryption, configurable latency</span>
               </div>
               <div class="protocol">
                 <span class="protocol-name">SRTLA</span>
-                <span class="protocol-desc">Bonded connections for mobile (BELABOX compatible)</span>
-              </div>
-              <div class="protocol">
-                <span class="protocol-name">RTMP</span>
-                <span class="protocol-desc">Push from encoders, OBS, hardware</span>
-              </div>
-              <div class="protocol">
-                <span class="protocol-name">UDP</span>
-                <span class="protocol-desc">Unicast from local sources</span>
+                <span class="protocol-desc">Multi-link bonding for mobile (BELABOX compatible)</span>
               </div>
               <div class="protocol">
                 <span class="protocol-name">HTTP/TS</span>
-                <span class="protocol-desc">Pull from web sources</span>
+                <span class="protocol-desc">Pull from web sources, CDN feeds</span>
+              </div>
+              <div class="protocol">
+                <span class="protocol-name">UDP</span>
+                <span class="protocol-desc">Unicast from local network sources</span>
               </div>
             </div>
           </div>
@@ -346,23 +405,27 @@
             <div class="protocol-list">
               <div class="protocol">
                 <span class="protocol-name">SRT</span>
-                <span class="protocol-desc">Push to any SRT receiver, multiple simultaneous</span>
+                <span class="protocol-desc">Listener/Caller to N destinations simultaneously</span>
+              </div>
+              <div class="protocol">
+                <span class="protocol-name">SRTLA</span>
+                <span class="protocol-desc">Bonded output to remote SRTLA receivers</span>
               </div>
               <div class="protocol">
                 <span class="protocol-name">RTMP</span>
                 <span class="protocol-desc">YouTube, Twitch, Facebook, custom endpoints</span>
               </div>
               <div class="protocol">
-                <span class="protocol-name">UDP Multicast</span>
-                <span class="protocol-desc">Efficient local distribution</span>
+                <span class="protocol-name">HTTP/TS</span>
+                <span class="protocol-desc">Built-in server for VLC, ffplay, web players</span>
+              </div>
+              <div class="protocol">
+                <span class="protocol-name">UDP</span>
+                <span class="protocol-desc">Unicast to network destinations</span>
               </div>
               <div class="protocol">
                 <span class="protocol-name">HLS</span>
-                <span class="protocol-desc">Adaptive streaming for web players</span>
-              </div>
-              <div class="protocol">
-                <span class="protocol-name">HTTP/TS</span>
-                <span class="protocol-desc">Direct TS streaming for VLC, players</span>
+                <span class="protocol-desc">Adaptive streaming with configurable segments</span>
               </div>
             </div>
           </div>
@@ -447,6 +510,240 @@
       </div>
     </section>
 
+    <!-- INTERFACE - Screenshots -->
+    <section id="interface" class="section section-dark">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-number">06</span>
+          <h2 class="section-title">Interface</h2>
+          <p class="section-desc">Control room meets simplicity.</p>
+        </div>
+
+        <div class="screenshots-grid">
+          <!-- Screenshot 1: Dashboard -->
+          <div class="screenshot-card screenshot-featured">
+            <div class="screenshot-placeholder" data-screenshot="dashboard">
+              <div class="placeholder-icon">
+                <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <rect x="4" y="8" width="40" height="32" rx="2"/>
+                  <path d="M4 16h40"/>
+                  <rect x="8" y="20" width="14" height="8" rx="1"/>
+                  <rect x="8" y="32" width="14" height="4" rx="1"/>
+                  <rect x="26" y="20" width="14" height="16" rx="1"/>
+                </svg>
+              </div>
+              <span class="placeholder-label">Screenshot: Dashboard</span>
+              <span class="placeholder-hint">Route list with real-time status</span>
+            </div>
+            <div class="screenshot-info">
+              <h4>Dashboard</h4>
+              <p>Overview of all routes with real-time status, connection indicators, and quick actions.</p>
+            </div>
+          </div>
+
+          <!-- Screenshot 2: Route Config -->
+          <div class="screenshot-card">
+            <div class="screenshot-placeholder" data-screenshot="route-config">
+              <div class="placeholder-icon">
+                <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <rect x="8" y="6" width="32" height="36" rx="2"/>
+                  <path d="M14 14h20"/>
+                  <path d="M14 22h16"/>
+                  <path d="M14 30h12"/>
+                  <circle cx="34" cy="34" r="6"/>
+                  <path d="M34 31v6M31 34h6"/>
+                </svg>
+              </div>
+              <span class="placeholder-label">Screenshot: Route Config</span>
+            </div>
+            <div class="screenshot-info">
+              <h4>Route Configuration</h4>
+              <p>Create/edit modal with inputs, outputs, and transcode parameters.</p>
+            </div>
+          </div>
+
+          <!-- Screenshot 3: Metrics Graphs -->
+          <div class="screenshot-card">
+            <div class="screenshot-placeholder" data-screenshot="metrics">
+              <div class="placeholder-icon">
+                <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M8 40V12"/>
+                  <path d="M8 40h32"/>
+                  <path d="M12 32l8-12 6 8 10-16"/>
+                  <circle cx="12" cy="32" r="2"/>
+                  <circle cx="20" cy="20" r="2"/>
+                  <circle cx="26" cy="28" r="2"/>
+                  <circle cx="36" cy="12" r="2"/>
+                </svg>
+              </div>
+              <span class="placeholder-label">Screenshot: Metrics</span>
+            </div>
+            <div class="screenshot-info">
+              <h4>Real-Time Metrics</h4>
+              <p>RTT, bandwidth, packet loss graphs with 7-day history.</p>
+            </div>
+          </div>
+
+          <!-- Screenshot 4: Audit Log -->
+          <div class="screenshot-card">
+            <div class="screenshot-placeholder" data-screenshot="audit">
+              <div class="placeholder-icon">
+                <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M12 8v32"/>
+                  <circle cx="12" cy="12" r="3"/>
+                  <circle cx="12" cy="24" r="3"/>
+                  <circle cx="12" cy="36" r="3"/>
+                  <path d="M18 12h20"/>
+                  <path d="M18 24h16"/>
+                  <path d="M18 36h12"/>
+                </svg>
+              </div>
+              <span class="placeholder-label">Screenshot: Audit Log</span>
+            </div>
+            <div class="screenshot-info">
+              <h4>Audit Log</h4>
+              <p>Chronological timeline of all actions with filters by route, user, event type.</p>
+            </div>
+          </div>
+
+          <!-- Screenshot 5: Audio Matrix -->
+          <div class="screenshot-card">
+            <div class="screenshot-placeholder" data-screenshot="audio-matrix">
+              <div class="placeholder-icon">
+                <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <rect x="6" y="12" width="8" height="24" rx="1"/>
+                  <rect x="20" y="8" width="8" height="32" rx="1"/>
+                  <rect x="34" y="16" width="8" height="20" rx="1"/>
+                  <path d="M10 20v8"/>
+                  <path d="M24 14v20"/>
+                  <path d="M38 22v8"/>
+                </svg>
+              </div>
+              <span class="placeholder-label">Screenshot: Audio Matrix</span>
+            </div>
+            <div class="screenshot-info">
+              <h4>Audio Matrix</h4>
+              <p>Audio routing configuration: 7.1→stereo, channel extraction, gain control.</p>
+            </div>
+          </div>
+
+          <!-- Screenshot 6: System Monitor -->
+          <div class="screenshot-card">
+            <div class="screenshot-placeholder" data-screenshot="system">
+              <div class="placeholder-icon">
+                <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <circle cx="24" cy="24" r="16"/>
+                  <path d="M24 14v10l6 6"/>
+                  <path d="M24 8v2"/>
+                  <path d="M24 38v2"/>
+                  <path d="M8 24h2"/>
+                  <path d="M38 24h2"/>
+                </svg>
+              </div>
+              <span class="placeholder-label">Screenshot: System</span>
+            </div>
+            <div class="screenshot-info">
+              <h4>System Monitoring</h4>
+              <p>CPU, RAM, leak detection, restart events with historical graphs.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TUTORIALS - Video placeholders -->
+    <section id="tutorials" class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-number">07</span>
+          <h2 class="section-title">Tutorials</h2>
+          <p class="section-desc">From zero to production in minutes.</p>
+        </div>
+
+        <div class="tutorials-grid">
+          <!-- Tutorial 1: Getting Started -->
+          <div class="tutorial-card">
+            <div class="video-placeholder" data-video="getting-started">
+              <div class="play-button">
+                <svg viewBox="0 0 48 48" fill="currentColor">
+                  <polygon points="18,12 36,24 18,36"/>
+                </svg>
+              </div>
+              <span class="video-duration">~5 min</span>
+            </div>
+            <div class="tutorial-info">
+              <h4>Getting Started</h4>
+              <p>Installation, first launch, initial configuration.</p>
+            </div>
+          </div>
+
+          <!-- Tutorial 2: First Route -->
+          <div class="tutorial-card">
+            <div class="video-placeholder" data-video="first-route">
+              <div class="play-button">
+                <svg viewBox="0 0 48 48" fill="currentColor">
+                  <polygon points="18,12 36,24 18,36"/>
+                </svg>
+              </div>
+              <span class="video-duration">~8 min</span>
+            </div>
+            <div class="tutorial-info">
+              <h4>Create Your First Route</h4>
+              <p>Configure an SRT input, add RTMP and HLS outputs.</p>
+            </div>
+          </div>
+
+          <!-- Tutorial 3: SRTLA Setup -->
+          <div class="tutorial-card">
+            <div class="video-placeholder" data-video="srtla-setup">
+              <div class="play-button">
+                <svg viewBox="0 0 48 48" fill="currentColor">
+                  <polygon points="18,12 36,24 18,36"/>
+                </svg>
+              </div>
+              <span class="video-duration">~10 min</span>
+            </div>
+            <div class="tutorial-info">
+              <h4>SRTLA Bonding</h4>
+              <p>Complete setup with BELABOX, latency configuration, failover.</p>
+            </div>
+          </div>
+
+          <!-- Tutorial 4: Audio Matrix -->
+          <div class="tutorial-card">
+            <div class="video-placeholder" data-video="audio-matrix">
+              <div class="play-button">
+                <svg viewBox="0 0 48 48" fill="currentColor">
+                  <polygon points="18,12 36,24 18,36"/>
+                </svg>
+              </div>
+              <span class="video-duration">~7 min</span>
+            </div>
+            <div class="tutorial-info">
+              <h4>Audio Matrix</h4>
+              <p>Downmix 7.1→stereo, commentary channel extraction.</p>
+            </div>
+          </div>
+
+          <!-- Tutorial 5: API Integration -->
+          <div class="tutorial-card">
+            <div class="video-placeholder" data-video="api-integration">
+              <div class="play-button">
+                <svg viewBox="0 0 48 48" fill="currentColor">
+                  <polygon points="18,12 36,24 18,36"/>
+                </svg>
+              </div>
+              <span class="video-duration">~12 min</span>
+            </div>
+            <div class="tutorial-info">
+              <h4>API Integration</h4>
+              <p>REST API, WebSocket, automation with scripts.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- FOOTER -->
     <footer id="contact" class="footer">
       <div class="container">
@@ -465,11 +762,11 @@
               <a href="#flow">How it works</a>
               <a href="#features">Features</a>
               <a href="#protocols">Protocols</a>
-              <a href="#specs">Specifications</a>
+              <a href="#interface">Interface</a>
             </div>
             <div class="footer-col">
               <h4>Resources</h4>
-              <a href="#">Documentation</a>
+              <a href="#tutorials">Tutorials</a>
               <a href="#">API Reference</a>
               <a href="#">Support</a>
             </div>
@@ -496,16 +793,18 @@
 
   <script>
     // ═══════════════════════════════════════════════════════════════
-    // PARTICLE SYSTEM - Data Stream Effect
-    // Particles emanate from center, flow horizontally to edges
+    // PARTICLE SYSTEM - Refined broadcast aesthetic
+    // Subtle data streams emanating from center
     // ═══════════════════════════════════════════════════════════════
 
     class Particle {
-      constructor(canvas, ctx) {
+      constructor(canvas, ctx, laneIndex, totalLanes) {
         this.canvas = canvas;
         this.ctx = ctx;
-        this.trail = []; // Position history for digital trail
-        this.trailLength = 12;
+        this.laneIndex = laneIndex;
+        this.totalLanes = totalLanes;
+        this.trail = [];
+        this.trailLength = 50 + Math.floor(Math.random() * 30); // 50-80 segments - long trails
         this.reset();
       }
 
@@ -513,109 +812,111 @@
         const w = window.innerWidth;
         const h = window.innerHeight;
 
-        // Spawn exactly at center
-        this.x = w / 2;
-        this.y = h / 2 + (Math.random() - 0.5) * 80;
+        // Lanes: organized horizontal channels
+        const laneSpacing = h * 0.5 / this.totalLanes;
+        const laneOffset = (this.laneIndex - this.totalLanes / 2 + 0.5) * laneSpacing;
 
-        // 50/50 left or right direction
-        this.direction = Math.random() < 0.5 ? -1 : 1;
+        // Direction based on lane (alternating for symmetry)
+        this.direction = this.laneIndex % 2 === 0 ? 1 : -1;
 
-        // Velocity - horizontal with slight vertical drift
-        this.vx = (1 + Math.random() * 1.5) * this.direction;
-        this.vy = (Math.random() - 0.5) * 0.3;
+        // Spawn OFFSET from center - leave center clear
+        // Going right → spawn right of center (away from center)
+        // Going left → spawn left of center (away from center)
+        const spawnOffset = w * 0.18; // 18% from center
+        this.x = w / 2 + (this.direction * spawnOffset) + (Math.random() - 0.5) * 30;
+        this.y = h / 2 + laneOffset;
 
-        // Size
-        this.size = 1.5 + Math.random() * 1.5;
+        // Steady velocity
+        this.vx = 2.5 * this.direction;
+        this.vy = 0;
 
-        // Lifetime
+        // Consistent size
+        this.size = 1.2;
+
+        // Longer lifetime for longer trails
         this.life = 1;
-        this.decay = 0.002 + Math.random() * 0.004;
+        this.decay = 0.002 + Math.random() * 0.002;
 
-        // Color - cyan/blue spectrum
-        const colors = [
-          { r: 0, g: 212, b: 255 },    // Cyan
-          { r: 86, g: 204, b: 242 },   // Light blue
-          { r: 0, g: 168, b: 255 },    // Electric blue
-        ];
-        this.color = colors[Math.floor(Math.random() * colors.length)];
+        // Single cohesive cyan
+        this.color = { r: 0, g: 220, b: 255 };
 
-        // Opacity
-        this.maxOpacity = 0.4 + Math.random() * 0.4;
+        // Subtle
+        this.maxOpacity = 0.25 + Math.random() * 0.1;
 
-        // Clear trail
         this.trail = [];
       }
 
       update() {
         const w = window.innerWidth;
-        const h = window.innerHeight;
 
-        // Store position in trail
         this.trail.push({ x: this.x, y: this.y });
         if (this.trail.length > this.trailLength) {
           this.trail.shift();
         }
 
-        // Move particle
+        // Constant velocity - no acceleration, orderly flow
         this.x += this.vx;
         this.y += this.vy;
-
-        // Decay life
         this.life -= this.decay;
 
-        // Subtle acceleration outward
-        this.vx *= 1.008;
-
-        // Reset if dead or off screen
-        if (this.life <= 0 || this.x < -20 || this.x > w + 20 || this.y < -20 || this.y > h + 20) {
+        if (this.life <= 0 || this.x < -100 || this.x > w + 100) {
           this.reset();
         }
       }
 
       draw() {
         const { r, g, b } = this.color;
-        const w = window.innerWidth;
 
-        // Base opacity
-        const distFromCenter = Math.abs(this.x - w / 2) / (w / 2);
-        const fadeIn = Math.min(1, (1 - this.life) * 6);
-        const fadeOut = this.life;
-        const baseOpacity = this.maxOpacity * fadeIn * fadeOut * (1 - distFromCenter * 0.4);
+        const fadeIn = Math.min(1, (1 - this.life) * 4);
+        const fadeOut = Math.pow(this.life, 0.6);
+        const baseOpacity = this.maxOpacity * fadeIn * fadeOut;
 
-        // Draw digital trail (segmented for digital look)
-        for (let i = 0; i < this.trail.length; i++) {
-          const point = this.trail[i];
-          const trailProgress = i / this.trail.length;
-          const trailOpacity = baseOpacity * trailProgress * 0.6;
-          const trailSize = this.size * (0.3 + trailProgress * 0.5);
+        if (this.trail.length < 2) return;
 
-          // Draw trail segment as small rectangle (digital look)
-          this.ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${trailOpacity})`;
-          this.ctx.fillRect(
-            point.x - trailSize / 2,
-            point.y - trailSize / 2,
-            trailSize * 1.5,
-            trailSize
-          );
+        // Draw trail segment by segment with fading opacity
+        const len = this.trail.length;
+        for (let i = 0; i < len - 1; i++) {
+          const progress = i / (len - 1); // 0 = tail, 1 = head
+          const segmentOpacity = baseOpacity * Math.pow(progress, 0.5); // Fade from tail to head
+
+          // Skip very faint segments
+          if (segmentOpacity < 0.02) continue;
+
+          const p1 = this.trail[i];
+          const p2 = this.trail[i + 1];
+
+          // Main bright line
+          this.ctx.beginPath();
+          this.ctx.moveTo(p1.x, p1.y);
+          this.ctx.lineTo(p2.x, p2.y);
+          this.ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${segmentOpacity})`;
+          this.ctx.lineWidth = this.size * (0.5 + progress * 0.5); // Thinner at tail
+          this.ctx.lineCap = 'round';
+          this.ctx.stroke();
+
+          // Glow layer
+          this.ctx.beginPath();
+          this.ctx.moveTo(p1.x, p1.y);
+          this.ctx.lineTo(p2.x, p2.y);
+          this.ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${segmentOpacity * 0.3})`;
+          this.ctx.lineWidth = this.size * 3 * (0.3 + progress * 0.7);
+          this.ctx.stroke();
         }
 
-        // Draw head glow
-        const gradient = this.ctx.createRadialGradient(
+        // Bright head with glow
+        const headGlow = this.ctx.createRadialGradient(
           this.x, this.y, 0,
-          this.x, this.y, this.size * 3
+          this.x, this.y, this.size * 4
         );
-        gradient.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${baseOpacity})`);
-        gradient.addColorStop(0.5, `rgba(${r}, ${g}, ${b}, ${baseOpacity * 0.3})`);
-        gradient.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
+        headGlow.addColorStop(0, `rgba(255, 255, 255, ${baseOpacity})`);
+        headGlow.addColorStop(0.2, `rgba(${r}, ${g}, ${b}, ${baseOpacity * 0.9})`);
+        headGlow.addColorStop(0.5, `rgba(${r}, ${g}, ${b}, ${baseOpacity * 0.4})`);
+        headGlow.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
 
         this.ctx.beginPath();
-        this.ctx.arc(this.x, this.y, this.size * 3, 0, Math.PI * 2);
-        this.ctx.fillStyle = gradient;
+        this.ctx.arc(this.x, this.y, this.size * 4, 0, Math.PI * 2);
+        this.ctx.fillStyle = headGlow;
         this.ctx.fill();
-
-        // Draw bright head core
-        this.ctx.fillStyle = `rgba(255, 255, 255, ${baseOpacity * 0.8})`;
-        this.ctx.fillRect(this.x - this.size/2, this.y - this.size/2, this.size, this.size);
       }
     }
 
@@ -624,18 +925,18 @@
         this.canvas = document.getElementById(canvasId);
         this.ctx = this.canvas.getContext('2d');
         this.particles = [];
-        this.particleCount = 40;
+        this.laneCount = 8; // Network lanes
+        this.particlesPerLane = 2; // Particles per lane = 16 total
         this.animationId = null;
         this.width = 0;
         this.height = 0;
+        this.started = false;
 
         this.resize();
-        this.init();
-        this.animate();
+        // Don't start immediately - wait for start() call
 
         window.addEventListener('resize', () => {
           this.resize();
-          this.particles.forEach(p => p.canvas = this.canvas);
         });
       }
 
@@ -646,11 +947,23 @@
         this.canvas.height = this.height;
       }
 
+      start() {
+        if (this.started) return;
+        this.started = true;
+        this.init();
+        this.animate();
+      }
+
       init() {
-        for (let i = 0; i < this.particleCount; i++) {
-          const particle = new Particle(this.canvas, this.ctx);
-          particle.life = Math.random();
-          this.particles.push(particle);
+        // Create particles organized by lanes
+        for (let lane = 0; lane < this.laneCount; lane++) {
+          for (let i = 0; i < this.particlesPerLane; i++) {
+            const particle = new Particle(this.canvas, this.ctx, lane, this.laneCount);
+            // Stagger by lane and index for even distribution
+            particle.life = (lane / this.laneCount) + (i / this.particlesPerLane) * 0.5;
+            particle.life = particle.life % 1; // Wrap to 0-1
+            this.particles.push(particle);
+          }
         }
       }
 
@@ -675,7 +988,7 @@
       }
     }
 
-    // Initialize particle system
+    // Initialize particle system (doesn't start yet)
     const particleSystem = new ParticleSystem('particleCanvas');
 
     // ═══════════════════════════════════════════════════════════════
@@ -684,9 +997,16 @@
 
     const intro = document.getElementById('intro');
     const introVideo = document.getElementById('introVideo');
-    const introPlay = document.getElementById('introPlay');
+    const introSound = document.getElementById('introSound');
     const introSkip = document.getElementById('introSkip');
     const site = document.getElementById('site');
+    const iconMuted = introSound.querySelector('.icon-muted');
+    const iconUnmuted = introSound.querySelector('.icon-unmuted');
+
+    // Start particles 1 second after video begins playing
+    introVideo.addEventListener('play', () => {
+      setTimeout(() => particleSystem.start(), 1000);
+    }, { once: true });
 
     function showSite() {
       intro.classList.add('intro-hidden');
@@ -696,10 +1016,28 @@
       setTimeout(() => particleSystem.stop(), 1000);
     }
 
-    introPlay.addEventListener('click', () => {
-      introPlay.style.display = 'none';
-      introSkip.style.opacity = '1';
-      introVideo.play();
+    // Toggle sound function
+    function toggleSound() {
+      introVideo.muted = !introVideo.muted;
+      if (introVideo.muted) {
+        iconMuted.style.display = 'block';
+        iconUnmuted.style.display = 'none';
+        introSound.classList.remove('sound-on');
+      } else {
+        iconMuted.style.display = 'none';
+        iconUnmuted.style.display = 'block';
+        introSound.classList.add('sound-on');
+      }
+    }
+
+    // Sound button click
+    introSound.addEventListener('click', toggleSound);
+
+    // Click on video/center to enable sound (first click only)
+    introVideo.addEventListener('click', () => {
+      if (introVideo.muted) {
+        toggleSound();
+      }
     });
 
     introSkip.addEventListener('click', () => {
@@ -715,6 +1053,35 @@
     const nav = document.querySelector('.nav');
     window.addEventListener('scroll', () => {
       nav.classList.toggle('nav-scrolled', window.scrollY > 50);
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // SCROLL ANIMATIONS - Reveal elements on scroll
+    // ═══════════════════════════════════════════════════════════════
+
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          // Stagger children if it's a grid
+          const children = entry.target.querySelectorAll('.feature, .screenshot-card, .tutorial-card, .protocol, .spec, .usecase');
+          children.forEach((child, i) => {
+            child.style.transitionDelay = `${i * 0.08}s`;
+            child.classList.add('revealed');
+          });
+        }
+      });
+    }, observerOptions);
+
+    // Observe all sections and grids
+    document.querySelectorAll('.section, .features-grid, .screenshots-grid, .tutorials-grid, .protocols-table, .specs-grid, .usecases-grid').forEach(el => {
+      el.classList.add('reveal-on-scroll');
+      revealObserver.observe(el);
     });
   </script>
 
