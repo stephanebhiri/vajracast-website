@@ -83,28 +83,70 @@
         </div>
       </div>
       <div class="hero-visual">
-        <div class="hero-diagram">
-          <div class="diagram-node diagram-input">
-            <span class="node-label">INPUT</span>
-            <div class="node-ports">
-              <span>SRT</span>
-              <span>SRTLA</span>
-              <span>RTMP</span>
+        <div class="flow-diagram">
+          <!-- INPUT SIDE -->
+          <div class="flow-inputs">
+            <div class="flow-input">
+              <span class="flow-label">SRT</span>
+              <div class="flow-line input-line">
+                <div class="data-packet"></div>
+              </div>
+            </div>
+            <div class="flow-input">
+              <span class="flow-label">SRTLA</span>
+              <div class="flow-line input-line">
+                <div class="data-packet"></div>
+              </div>
+            </div>
+            <div class="flow-input">
+              <span class="flow-label">RTMP</span>
+              <div class="flow-line input-line">
+                <div class="data-packet"></div>
+              </div>
             </div>
           </div>
-          <div class="diagram-flow">
-            <svg viewBox="0 0 120 40">
-              <path d="M0 20 H40 M80 20 H120" stroke="currentColor" stroke-width="1" stroke-dasharray="4 4"/>
-              <rect x="40" y="8" width="40" height="24" rx="4" fill="none" stroke="currentColor" stroke-width="1"/>
-              <text x="60" y="24" text-anchor="middle" fill="currentColor" font-size="8">CORE</text>
-            </svg>
+
+          <!-- CORE -->
+          <div class="flow-core">
+            <div class="core-ring core-ring-outer"></div>
+            <div class="core-ring core-ring-inner"></div>
+            <div class="core-center">
+              <span>VAJRA</span>
+              <span class="core-sub">CORE</span>
+            </div>
           </div>
-          <div class="diagram-node diagram-output">
-            <span class="node-label">OUTPUTS</span>
-            <div class="node-ports">
-              <span>SRT ×N</span>
-              <span>RTMP</span>
-              <span>UDP</span>
+
+          <!-- OUTPUT SIDE -->
+          <div class="flow-outputs">
+            <div class="flow-output">
+              <div class="flow-line output-line">
+                <div class="data-packet"></div>
+              </div>
+              <span class="flow-label">SRT ×N</span>
+            </div>
+            <div class="flow-output">
+              <div class="flow-line output-line">
+                <div class="data-packet"></div>
+              </div>
+              <span class="flow-label">RTMP</span>
+            </div>
+            <div class="flow-output">
+              <div class="flow-line output-line">
+                <div class="data-packet"></div>
+              </div>
+              <span class="flow-label">UDP</span>
+            </div>
+            <div class="flow-output">
+              <div class="flow-line output-line">
+                <div class="data-packet"></div>
+              </div>
+              <span class="flow-label">HLS</span>
+            </div>
+            <div class="flow-output">
+              <div class="flow-line output-line">
+                <div class="data-packet"></div>
+              </div>
+              <span class="flow-label">Multicast</span>
             </div>
           </div>
         </div>
