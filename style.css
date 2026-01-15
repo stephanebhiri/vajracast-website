@@ -173,8 +173,11 @@ img, video {
   }
 }
 
-/* Particle Canvas - above video but doesn't block clicks */
-.particle-canvas {
+/* ═══════════════════════════════════════════════════════════════
+   PURE CSS DATA STREAMS - No JavaScript
+   ═══════════════════════════════════════════════════════════════ */
+
+.streams {
   position: fixed;
   top: 0;
   left: 0;
@@ -182,6 +185,115 @@ img, video {
   height: 100vh;
   z-index: 15;
   pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4vh;
+}
+
+.stream {
+  position: relative;
+  height: 2px;
+  width: 100%;
+  overflow: visible;
+}
+
+/* Trailing particle effect using ::after */
+.stream::after {
+  content: '';
+  position: absolute;
+  height: 2px;
+  width: 18vw;
+  border-radius: 2px;
+  opacity: 0;
+}
+
+/* Glow layer using ::before */
+.stream::before {
+  content: '';
+  position: absolute;
+  height: 8px;
+  width: 18vw;
+  top: -3px;
+  border-radius: 4px;
+  filter: blur(4px);
+  opacity: 0;
+}
+
+/* RIGHT-MOVING STREAMS */
+.stream-right::after,
+.stream-right::before {
+  background: linear-gradient(to right,
+    rgba(0, 220, 255, 0) 0%,
+    rgba(0, 220, 255, 0.3) 70%,
+    rgba(0, 220, 255, 0.6) 90%,
+    rgba(255, 255, 255, 0.9) 100%
+  );
+  left: calc(50% + 15vw);
+  animation: stream-right 8s cubic-bezier(0.2, 0.4, 0.3, 1) infinite;
+}
+
+/* LEFT-MOVING STREAMS */
+.stream-left::after,
+.stream-left::before {
+  background: linear-gradient(to left,
+    rgba(0, 220, 255, 0) 0%,
+    rgba(0, 220, 255, 0.3) 70%,
+    rgba(0, 220, 255, 0.6) 90%,
+    rgba(255, 255, 255, 0.9) 100%
+  );
+  right: calc(50% + 15vw);
+  animation: stream-left 8s cubic-bezier(0.2, 0.4, 0.3, 1) infinite;
+}
+
+/* Staggered delays - rapid fountain pattern (+0.12s, start 0.25s) */
+.stream:nth-child(1)::after, .stream:nth-child(1)::before { animation-delay: 0.25s; }
+.stream:nth-child(2)::after, .stream:nth-child(2)::before { animation-delay: 0.37s; }
+.stream:nth-child(3)::after, .stream:nth-child(3)::before { animation-delay: 0.49s; }
+.stream:nth-child(4)::after, .stream:nth-child(4)::before { animation-delay: 0.61s; }
+.stream:nth-child(5)::after, .stream:nth-child(5)::before { animation-delay: 0.73s; }
+.stream:nth-child(6)::after, .stream:nth-child(6)::before { animation-delay: 0.85s; }
+.stream:nth-child(7)::after, .stream:nth-child(7)::before { animation-delay: 0.97s; }
+.stream:nth-child(8)::after, .stream:nth-child(8)::before { animation-delay: 1.09s; }
+.stream:nth-child(9)::after, .stream:nth-child(9)::before { animation-delay: 1.21s; }
+.stream:nth-child(10)::after, .stream:nth-child(10)::before { animation-delay: 1.33s; }
+.stream:nth-child(11)::after, .stream:nth-child(11)::before { animation-delay: 1.45s; }
+.stream:nth-child(12)::after, .stream:nth-child(12)::before { animation-delay: 1.57s; }
+.stream:nth-child(13)::after, .stream:nth-child(13)::before { animation-delay: 1.69s; }
+.stream:nth-child(14)::after, .stream:nth-child(14)::before { animation-delay: 1.81s; }
+
+@keyframes stream-right {
+  0% {
+    left: calc(50% + 15vw);
+    opacity: 0;
+  }
+  5% {
+    opacity: 0.35;
+  }
+  85% {
+    opacity: 0.35;
+  }
+  100% {
+    left: calc(100% + 5vw);
+    opacity: 0;
+  }
+}
+
+@keyframes stream-left {
+  0% {
+    right: calc(50% + 15vw);
+    opacity: 0;
+  }
+  5% {
+    opacity: 0.35;
+  }
+  85% {
+    opacity: 0.35;
+  }
+  100% {
+    right: calc(100% + 5vw);
+    opacity: 0;
+  }
 }
 
 /* Broadcast frame corners */
