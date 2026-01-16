@@ -14,23 +14,7 @@
 
   <!-- VIDEO INTRO (Full screen takeover) -->
   <div class="intro" id="intro">
-    <!-- Pure CSS data streams - no JavaScript -->
-    <div class="streams">
-      <div class="stream stream-right"></div>
-      <div class="stream stream-left"></div>
-      <div class="stream stream-right"></div>
-      <div class="stream stream-left"></div>
-      <div class="stream stream-right"></div>
-      <div class="stream stream-left"></div>
-      <div class="stream stream-right"></div>
-      <div class="stream stream-left"></div>
-      <div class="stream stream-right"></div>
-      <div class="stream stream-left"></div>
-      <div class="stream stream-right"></div>
-      <div class="stream stream-left"></div>
-      <div class="stream stream-right"></div>
-      <div class="stream stream-left"></div>
-    </div>
+    <canvas class="particle-canvas" id="particleCanvas"></canvas>
     <div class="intro-corner intro-corner-tl"></div>
     <div class="intro-corner intro-corner-tr"></div>
     <div class="intro-corner intro-corner-bl"></div>
@@ -809,7 +793,206 @@
 
   <script>
     // ═══════════════════════════════════════════════════════════════
-    // INTRO / SITE LOGIC (particles are now pure CSS)
+    // PARTICLE SYSTEM - Refined broadcast aesthetic
+    // Subtle data streams emanating from center
+    // ═══════════════════════════════════════════════════════════════
+
+    class Particle {
+      constructor(canvas, ctx, laneIndex, totalLanes) {
+        this.canvas = canvas;
+        this.ctx = ctx;
+        this.laneIndex = laneIndex;
+        this.totalLanes = totalLanes;
+        this.trail = [];
+        this.trailLength = 50 + Math.floor(Math.random() * 30); // 50-80 segments - long trails
+        this.reset();
+      }
+
+      reset() {
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+
+        // Lanes: organized horizontal channels
+        const laneSpacing = h * 0.5 / this.totalLanes;
+        const laneOffset = (this.laneIndex - this.totalLanes / 2 + 0.5) * laneSpacing;
+
+        // Direction based on lane (alternating for symmetry)
+        this.direction = this.laneIndex % 2 === 0 ? 1 : -1;
+
+        // Spawn OFFSET from center - leave center clear
+        // Going right → spawn right of center (away from center)
+        // Going left → spawn left of center (away from center)
+        const spawnOffset = w * 0.18; // 18% from center
+        this.x = w / 2 + (this.direction * spawnOffset) + (Math.random() - 0.5) * 30;
+        this.y = h / 2 + laneOffset;
+
+        // Steady velocity
+        this.vx = 2.5 * this.direction;
+        this.vy = 0;
+
+        // Consistent size
+        this.size = 1.2;
+
+        // Longer lifetime for longer trails
+        this.life = 1;
+        this.decay = 0.002 + Math.random() * 0.002;
+
+        // Single cohesive cyan
+        this.color = { r: 0, g: 220, b: 255 };
+
+        // Subtle
+        this.maxOpacity = 0.25 + Math.random() * 0.1;
+
+        this.trail = [];
+      }
+
+      update() {
+        const w = window.innerWidth;
+
+        this.trail.push({ x: this.x, y: this.y });
+        if (this.trail.length > this.trailLength) {
+          this.trail.shift();
+        }
+
+        // Constant velocity - no acceleration, orderly flow
+        this.x += this.vx;
+        this.y += this.vy;
+        this.life -= this.decay;
+
+        if (this.life <= 0 || this.x < -100 || this.x > w + 100) {
+          this.reset();
+        }
+      }
+
+      draw() {
+        const { r, g, b } = this.color;
+
+        const fadeIn = Math.min(1, (1 - this.life) * 4);
+        const fadeOut = Math.pow(this.life, 0.6);
+        const baseOpacity = this.maxOpacity * fadeIn * fadeOut;
+
+        if (this.trail.length < 2) return;
+
+        // Draw trail segment by segment with fading opacity
+        const len = this.trail.length;
+        for (let i = 0; i < len - 1; i++) {
+          const progress = i / (len - 1); // 0 = tail, 1 = head
+          const segmentOpacity = baseOpacity * Math.pow(progress, 0.5); // Fade from tail to head
+
+          // Skip very faint segments
+          if (segmentOpacity < 0.02) continue;
+
+          const p1 = this.trail[i];
+          const p2 = this.trail[i + 1];
+
+          // Main bright line
+          this.ctx.beginPath();
+          this.ctx.moveTo(p1.x, p1.y);
+          this.ctx.lineTo(p2.x, p2.y);
+          this.ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${segmentOpacity})`;
+          this.ctx.lineWidth = this.size * (0.5 + progress * 0.5); // Thinner at tail
+          this.ctx.lineCap = 'round';
+          this.ctx.stroke();
+
+          // Glow layer
+          this.ctx.beginPath();
+          this.ctx.moveTo(p1.x, p1.y);
+          this.ctx.lineTo(p2.x, p2.y);
+          this.ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${segmentOpacity * 0.3})`;
+          this.ctx.lineWidth = this.size * 3 * (0.3 + progress * 0.7);
+          this.ctx.stroke();
+        }
+
+        // Bright head with glow
+        const headGlow = this.ctx.createRadialGradient(
+          this.x, this.y, 0,
+          this.x, this.y, this.size * 4
+        );
+        headGlow.addColorStop(0, `rgba(255, 255, 255, ${baseOpacity})`);
+        headGlow.addColorStop(0.2, `rgba(${r}, ${g}, ${b}, ${baseOpacity * 0.9})`);
+        headGlow.addColorStop(0.5, `rgba(${r}, ${g}, ${b}, ${baseOpacity * 0.4})`);
+        headGlow.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
+
+        this.ctx.beginPath();
+        this.ctx.arc(this.x, this.y, this.size * 4, 0, Math.PI * 2);
+        this.ctx.fillStyle = headGlow;
+        this.ctx.fill();
+      }
+    }
+
+    class ParticleSystem {
+      constructor(canvasId) {
+        this.canvas = document.getElementById(canvasId);
+        this.ctx = this.canvas.getContext('2d');
+        this.particles = [];
+        this.laneCount = 8; // Network lanes
+        this.particlesPerLane = 2; // Particles per lane = 16 total
+        this.animationId = null;
+        this.width = 0;
+        this.height = 0;
+        this.started = false;
+
+        this.resize();
+        // Don't start immediately - wait for start() call
+
+        window.addEventListener('resize', () => {
+          this.resize();
+        });
+      }
+
+      resize() {
+        this.width = window.innerWidth;
+        this.height = window.innerHeight;
+        this.canvas.width = this.width;
+        this.canvas.height = this.height;
+      }
+
+      start() {
+        if (this.started) return;
+        this.started = true;
+        this.init();
+        this.animate();
+      }
+
+      init() {
+        // Create particles organized by lanes
+        for (let lane = 0; lane < this.laneCount; lane++) {
+          for (let i = 0; i < this.particlesPerLane; i++) {
+            const particle = new Particle(this.canvas, this.ctx, lane, this.laneCount);
+            // Stagger by lane and index for even distribution
+            particle.life = (lane / this.laneCount) + (i / this.particlesPerLane) * 0.5;
+            particle.life = particle.life % 1; // Wrap to 0-1
+            this.particles.push(particle);
+          }
+        }
+      }
+
+      animate() {
+        // Clear canvas completely (transparent background)
+        this.ctx.clearRect(0, 0, this.width, this.height);
+
+        // Update and draw
+        for (const particle of this.particles) {
+          particle.update();
+          particle.draw();
+        }
+
+        this.animationId = requestAnimationFrame(() => this.animate());
+      }
+
+      stop() {
+        if (this.animationId) {
+          cancelAnimationFrame(this.animationId);
+          this.ctx.clearRect(0, 0, this.width, this.height);
+        }
+      }
+    }
+
+    // Initialize particle system (doesn't start yet)
+    const particleSystem = new ParticleSystem('particleCanvas');
+
+    // ═══════════════════════════════════════════════════════════════
+    // INTRO / SITE LOGIC
     // ═══════════════════════════════════════════════════════════════
 
     const intro = document.getElementById('intro');
@@ -820,10 +1003,17 @@
     const iconMuted = introSound.querySelector('.icon-muted');
     const iconUnmuted = introSound.querySelector('.icon-unmuted');
 
+    // Start particles 1 second after video begins playing
+    introVideo.addEventListener('play', () => {
+      setTimeout(() => particleSystem.start(), 1000);
+    }, { once: true });
+
     function showSite() {
       intro.classList.add('intro-hidden');
       site.classList.add('site-visible');
       document.body.style.overflow = 'auto';
+      // Stop particle system when intro ends
+      setTimeout(() => particleSystem.stop(), 1000);
     }
 
     // Toggle sound function
